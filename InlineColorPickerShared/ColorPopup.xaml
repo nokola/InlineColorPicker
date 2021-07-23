@@ -1,0 +1,16 @@
+﻿<Popup x:Class="InlineColorPicker.ColorPopup"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" StaysOpen='False' AllowsTransparency='True'
+        xmlns:my="clr-namespace:EasyPainter.Imaging.Silverlight" Height='134' Width='150' >
+    <Grid>
+        <Grid Margin='3' Background='White'>
+            <Rectangle Stroke="#77000000" Margin="-1" RadiusX="2" RadiusY="2"/> 
+            <Rectangle Stroke="#37000000" Margin="-2" RadiusX="2" RadiusY="2"/>
+            <Rectangle Stroke="#17000000" Margin="-3" RadiusX="2" RadiusY="2"/>
+            <my:ColorPicker x:Name='picker' Margin='4' />
+        </Grid>
+    </Grid>
+</Popup>

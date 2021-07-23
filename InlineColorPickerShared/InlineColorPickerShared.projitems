@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>6821d28a-0114-4e3b-9f95-3790cb3fa07c</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>InlineColorPickerShared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)AlphaSelectControl.xaml.cs">
+      <DependentUpon>AlphaSelectControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)ColorAdorner.xaml.cs">
+      <DependentUpon>ColorAdorner.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)ColorInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ColorPicker.xaml.cs">
+      <DependentUpon>ColorPicker.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)ColorPopup.xaml.cs">
+      <DependentUpon>ColorPopup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)ColorSpace.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Integration\ColorAdornmentTagger.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Integration\ColorAdornmentTaggerProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Integration\ColorTag.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Integration\ColorTagger.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Integration\ColorTaggerProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Support\IntraTextAdornmentTagger.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Support\IntraTextAdornmentTagTransformer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Support\RegexTagger.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="$(MSBuildThisFileDirectory)AlphaSelectControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)ColorAdorner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)ColorPicker.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)ColorPopup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)app.config" />
+  </ItemGroup>
+</Project>

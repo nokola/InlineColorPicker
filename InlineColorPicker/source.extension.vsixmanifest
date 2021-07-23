@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
+    <Metadata>
+        <Identity Id="InlineColorPicker.Microsoft.5b11f3ae-dd7e-422e-84bc-5cec46f80687" Version="2.3" Language="en-US" Publisher="Nokola" />
+        <DisplayName>Inline Color Picker</DisplayName>
+        <Description xml:space="preserve">Color picker extension for Visual Studio.</Description>
+        <License>License.txt</License>
+        <Tags>color picker, xaml, css, html, color</Tags>
+    </Metadata>
+    <Installation>
+        <InstallationTarget Version="[11.0,18.0)" Id="Microsoft.VisualStudio.Community" />
+        <InstallationTarget Version="[11.0,18.0)" Id="Microsoft.VisualStudio.Pro" />
+        <InstallationTarget Version="[11.0,18.0)" Id="Microsoft.VisualStudio.Enterprise" />
+    </Installation>
+    <Dependencies>
+        <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
+    </Dependencies>
+    <Assets>
+        <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%|" />
+    </Assets>
+    <Prerequisites>
+        <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[11.0,18.0)" DisplayName="Visual Studio core editor" />
+    </Prerequisites>
+</PackageManifest>

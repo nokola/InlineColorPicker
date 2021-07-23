@@ -1,0 +1,17 @@
+﻿<UserControl x:Class="InlineColorPicker.ColorAdorner"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Width='11' Height='10' Margin='0,-4,0,0' Cursor='Hand'>
+    <Grid x:Name='rootGrid' Background='Transparent' >
+        <Line Stroke="Gray" StrokeThickness="5" StrokeDashArray="1,1" X1="2.5" Y1="0" X2="2.5" Y2="20" VerticalAlignment='Top' HorizontalAlignment='Left' x:Name='line1'  />
+        <Line Stroke="Gray" StrokeThickness="5" StrokeDashArray="0,1,0" X1="7.5" Y1="0" X2="7.5" Y2="20" Grid.Column="1" VerticalAlignment='Top' HorizontalAlignment='Left' x:Name='line2' />
+        <Rectangle x:Name='rectColor' Fill='#5fff0000' Margin="0,0,.5,0" />
+        <Button Click='Button_Click' >
+            <Button.Template>
+                <ControlTemplate TargetType='Button'>
+                    <Rectangle Fill='Transparent' />
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+    </Grid>
+</UserControl>
