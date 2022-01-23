@@ -83,47 +83,60 @@
                      FontSize="13" 
 					 VerticalContentAlignment="Center"
                      Height="20"
+					 my:SelectAllFocusBehavior.Enable="True"
                      VerticalAlignment="Center" TextChanged="HexValue_TextChanged"/>
 			<TextBlock VerticalAlignment="Center" Foreground="White" Margin="2,0,0,0">A:</TextBlock>
 			<TextBox x:Name="AlphaValue" Foreground="Black" Background="#4fFFFFFF" BorderBrush="#4F444444" BorderThickness="1"
                      Width="30" 
-					 Text="255" 
+					 Text="0" 
 					 Margin="0,1,0,0"
                      FontSize="13" 
 					 VerticalContentAlignment="Center"
                      Height="20"
                      VerticalAlignment="Center" 
-					 TextChanged="HexValue_TextChanged" />
+					 my:SelectAllFocusBehavior.Enable="True"
+					 my:NumericByteValueOnlyBehavior.IsNumericByteValueOnly="True"
+					 TextChanged="ByteValue_TextChanged"
+					 MouseWheel="ByteValue_MouseWheel"/>
 			<TextBlock VerticalAlignment="Center" Foreground="White" Margin="2,0,0,0">R:</TextBlock>
 			<TextBox x:Name="RedValue" Foreground="Black" Background="#4fFFFFFF" BorderBrush="#4F444444" BorderThickness="1"
                      Width="30" 
-					 Text="255" 
+					 Text="0" 
 					 Margin="0,1,0,0"
                      FontSize="13" 
 					 VerticalContentAlignment="Center"
                      Height="20"
                      VerticalAlignment="Center" 
-					 TextChanged="HexValue_TextChanged"/>
+					 my:SelectAllFocusBehavior.Enable="True"
+					 my:NumericByteValueOnlyBehavior.IsNumericByteValueOnly="True"
+					 TextChanged="ByteValue_TextChanged"
+					 MouseWheel="ByteValue_MouseWheel"/>
 			<TextBlock VerticalAlignment="Center" Foreground="White" Margin="2,0,0,0">G:</TextBlock>
 			<TextBox x:Name="GreenValue" Foreground="Black" Background="#4fFFFFFF" BorderBrush="#4F444444" BorderThickness="1"
                      Width="30" 
-					 Text="255" 
+					 Text="0" 
 					 Margin="0,1,0,0"
                      FontSize="13" 
 					 VerticalContentAlignment="Center"
                      Height="20"
                      VerticalAlignment="Center" 
-					 TextChanged="HexValue_TextChanged"/>
+					 my:SelectAllFocusBehavior.Enable="True"
+					 my:NumericByteValueOnlyBehavior.IsNumericByteValueOnly="True"
+					 TextChanged="ByteValue_TextChanged"
+					 MouseWheel="ByteValue_MouseWheel"/>
 			<TextBlock VerticalAlignment="Center" Foreground="White" Margin="2,0,0,0">B:</TextBlock>
 			<TextBox x:Name="BlueValue" Foreground="Black" Background="#4fFFFFFF" BorderBrush="#4F444444" BorderThickness="1"
                      Width="30" 
-					 Text="255" 
+					 Text="0" 
 					 Margin="0,1,0,0"
                      FontSize="13" 
 					 VerticalContentAlignment="Center"
                      Height="20"
                      VerticalAlignment="Center" 
-					 TextChanged="HexValue_TextChanged"/>
+					 my:SelectAllFocusBehavior.Enable="True"
+					 my:NumericByteValueOnlyBehavior.IsNumericByteValueOnly="True"
+					 TextChanged="ByteValue_TextChanged"
+					 MouseWheel="ByteValue_MouseWheel"/>
 		</StackPanel>
 		<my:AlphaSelectControl Grid.Column="2" HorizontalAlignment="Center" Height="200"
                 x:Name="ctlAlphaSelect" Margin="0,0,0,134" Grid.Row="1"  />

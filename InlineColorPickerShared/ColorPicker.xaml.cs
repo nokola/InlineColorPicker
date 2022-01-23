@@ -48,18 +48,10 @@ namespace EasyPainter.Imaging.Silverlight
             byte a, r, g, b;
             if (GetArgb(text, out a, out r, out g, out b))
             {
-                // update alpha byte
                 AlphaValue.Text = a.ToString();
-                AlphaValue.SelectAll();
-                // update alpha byte
                 RedValue.Text = r.ToString();
-                RedValue.SelectAll();
-                // update alpha byte
                 GreenValue.Text = g.ToString();
-                GreenValue.SelectAll();
-                // update alpha byte
                 BlueValue.Text = b.ToString();
-                BlueValue.SelectAll();
             }
 
             if (text.StartsWith("#"))
@@ -219,6 +211,51 @@ namespace EasyPainter.Imaging.Silverlight
             UpdateOnColorChanged(a, r, g, b);
         }
 
+        private void ByteValue_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                if (AlphaValue == null || RedValue == null || GreenValue == null || BlueValue == null) return;
+                byte a, r, g, b;
+				if (byte.TryParse(AlphaValue.Text, out a))
+				    if (byte.TryParse(RedValue.Text, out r))
+				        if (byte.TryParse(GreenValue.Text, out g))
+			            	if (byte.TryParse(BlueValue.Text, out b))
+                            {
+                                byte[] data = { a, r, g, b };
+                                string hex = BitConverter.ToString(data).Replace("-", string.Empty);
+                                HexValue.Text = "#" + hex;
+                                //changing HexValue will trigger update.
+                                //UpdateOnColorChanged(a, r, g, b);
+                            }
+            }
+            catch { };
+        }
+
+        private void ByteValue_MouseWheel(object sender, MouseWheelEventArgs e)
+		{
+            TextBox txt = sender as TextBox;
+            byte value;
+            if (e.Delta > 0)
+			{
+                if (byte.TryParse(txt.Text, out value))
+				{
+                    value += 1;
+                    if (value > 255) value = 255;
+                    txt.Text = value.ToString();
+                }
+			}
+            else if (e.Delta < 0)
+			{
+                if (byte.TryParse(txt.Text, out value))
+                {
+                    value -= 1;
+                    if (value < 0) value = 0;
+                    txt.Text = value.ToString();
+                }
+            }
+        }
+
         private void UpdateOnColorChanged(byte a, byte r, byte g, byte b)
         {
             m_selectedColor.Color = Color.FromArgb(a, r, g, b);
@@ -255,28 +292,24 @@ namespace EasyPainter.Imaging.Silverlight
             if (AlphaValue != null)
             {
                 AlphaValue.Text = a.ToString();
-                AlphaValue.SelectAll();
             }
 
             // update alpha byte
             if (RedValue != null)
             {
                 RedValue.Text = r.ToString();
-                RedValue.SelectAll();
             }
 
             // update alpha byte
             if (GreenValue != null)
             {
                 GreenValue.Text = g.ToString();
-                GreenValue.SelectAll();
             }
 
             // update alpha byte
             if (BlueValue != null)
             {
                 BlueValue.Text = b.ToString();
-                BlueValue.SelectAll();
             }
 
             ColorSelected?.Invoke(m_selectedColor);
