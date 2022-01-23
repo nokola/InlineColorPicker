@@ -4,7 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" StaysOpen='False' AllowsTransparency='True'
-        xmlns:my="clr-namespace:EasyPainter.Imaging.Silverlight" Height='276' Width='276' >
+	        
+        xmlns:my="clr-namespace:EasyPainter.Imaging.Silverlight">
     <Grid>
         <Grid Margin='3' Background='#FF1F1F1F'>
             <Rectangle Stroke="#77000000" Margin="-1" RadiusX="2" RadiusY="2"/> 

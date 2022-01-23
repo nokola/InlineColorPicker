@@ -3,15 +3,15 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d" d:DesignHeight="262" d:DesignWidth="262" xmlns:my="clr-namespace:EasyPainter.Imaging.Silverlight">
+    mc:Ignorable="d" xmlns:my="clr-namespace:EasyPainter.Imaging.Silverlight">
 
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />
-			<RowDefinition />
+			<RowDefinition Height="255"/>
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition />
+			<ColumnDefinition Width="255"/>
 			<ColumnDefinition Width="30" />
 			<ColumnDefinition Width="auto" />
 		</Grid.ColumnDefinitions>
@@ -85,7 +85,7 @@
                      Height="20"
 					 my:SelectAllFocusBehavior.Enable="True"
                      VerticalAlignment="Center" TextChanged="HexValue_TextChanged"/>
-			<TextBlock VerticalAlignment="Center" Foreground="White" Margin="2,0,0,0">A:</TextBlock>
+			<TextBlock VerticalAlignment="Center" Foreground="White" Margin="32,0,0,0">A:</TextBlock>
 			<TextBox x:Name="AlphaValue" Foreground="Black" Background="#4fFFFFFF" BorderBrush="#4F444444" BorderThickness="1"
                      Width="30" 
 					 Text="0" 
