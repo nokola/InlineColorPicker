@@ -71,6 +71,7 @@ namespace EasyPainter.Imaging.Silverlight
             rectHueMonitor.MouseLeftButtonUp += new MouseButtonEventHandler(rectHueMonitor_MouseLeftButtonUp);
             rectHueMonitor.LostMouseCapture += new MouseEventHandler(rectHueMonitor_LostMouseCapture);
             rectHueMonitor.MouseMove += new MouseEventHandler(rectHueMonitor_MouseMove);
+            rectHueMonitor.MouseWheel += rectHueMonitor_MouseWheel;
 
             rectSampleMonitor.MouseLeftButtonDown += new MouseButtonEventHandler(rectSampleMonitor_MouseLeftButtonDown);
             rectSampleMonitor.MouseLeftButtonUp += new MouseButtonEventHandler(rectSampleMonitor_MouseLeftButtonUp);
@@ -82,6 +83,24 @@ namespace EasyPainter.Imaging.Silverlight
             m_sampleX = 0;
             m_sampleY = 0;
             this.LayoutUpdated += new EventHandler(ColorPicker_LayoutUpdated);
+        }
+
+        void rectHueMonitor_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            GeneralTransform trans = rectHueMonitorParent.TransformToDescendant(HueSelector);
+            Point p = trans.Transform(new Point(0, -4));
+            int yPos = (int)Math.Abs(p.Y);
+            if (yPos < 0) yPos = 0;
+            if (yPos >= rectHueMonitor.ActualHeight) yPos = (int)rectHueMonitor.ActualHeight - 1;
+            if (e.Delta > 0)
+			{
+                yPos -= 1;
+			}
+            else if (e.Delta < 0)
+			{
+                yPos += 1;
+            }
+            UpdateSelection(yPos);
         }
 
         bool _firstTime = true;

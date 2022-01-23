@@ -15,7 +15,7 @@
 			<ColumnDefinition Width="30" />
 			<ColumnDefinition Width="auto" />
 		</Grid.ColumnDefinitions>
-		<Grid Grid.Row="1" Grid.Column="1" Margin="5,0,5,0">
+		<Grid x:Name="rectHueMonitorParent" Grid.Row="1" Grid.Column="1" Margin="5,0,5,0">
 			<Rectangle x:Name="rectHueMonitor" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
 				<Rectangle.Fill>
 					<LinearGradientBrush StartPoint ="0,0" EndPoint="0,1">
