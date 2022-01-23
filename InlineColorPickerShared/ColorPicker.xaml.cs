@@ -38,13 +38,29 @@ namespace EasyPainter.Imaging.Silverlight
                 m_selectedColor = value;
                 Color c = m_selectedColor.Color.Value;
                 UpdateOnColorChanged(c.A, c.R, c.G, c.B);
-                SetHexText(ColorSpace.GetHexCodeOrName(m_selectedColor));
+                SetTexts(ColorSpace.GetHexCodeOrName(m_selectedColor));
             }
         }
 
-        private void SetHexText(string text)
+        private void SetTexts(string text)
         {
             HexValue.Text = text;
+            byte a, r, g, b;
+            if (GetArgb(text, out a, out r, out g, out b))
+            {
+                // update alpha byte
+                AlphaValue.Text = a.ToString();
+                AlphaValue.SelectAll();
+                // update alpha byte
+                RedValue.Text = r.ToString();
+                RedValue.SelectAll();
+                // update alpha byte
+                GreenValue.Text = g.ToString();
+                GreenValue.SelectAll();
+                // update alpha byte
+                BlueValue.Text = b.ToString();
+                BlueValue.SelectAll();
+            }
 
             if (text.StartsWith("#"))
             {
@@ -160,7 +176,7 @@ namespace EasyPainter.Imaging.Silverlight
             c.A = a;
             m_selectedColor.Color = c;
             SelectedColor.Fill = new SolidColorBrush(m_selectedColor.Color.Value);
-            SetHexText(ColorSpace.GetHexCodeOrName(m_selectedColor));
+            SetTexts(ColorSpace.GetHexCodeOrName(m_selectedColor));
 
             ctlAlphaSelect.DisplayColor = m_selectedColor.Color.Value;
             ColorSelected?.Invoke(m_selectedColor);
@@ -182,11 +198,16 @@ namespace EasyPainter.Imaging.Silverlight
             Color c = m_selectedColor.Color.Value;
             c.A = newAlpha;
             m_selectedColor.Color = c;
-            SetHexText(ColorSpace.GetHexCodeOrName(m_selectedColor));
+            SetTexts(ColorSpace.GetHexCodeOrName(m_selectedColor));
             SelectedColor.Fill = new SolidColorBrush(m_selectedColor.Color.Value);
 
             ColorSelected?.Invoke(m_selectedColor);
         }
+
+        private void Byte_Value_GotFocus(object sender, MouseButtonEventArgs e)
+		{
+            if (sender != null) ((TextBox)sender).SelectAll();
+		}
 
         private void HexValue_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -230,6 +251,34 @@ namespace EasyPainter.Imaging.Silverlight
                 ctlAlphaSelect.DisplayColor = m_selectedColor.Color.Value;
             }
 
+            // update alpha byte
+            if (AlphaValue != null)
+            {
+                AlphaValue.Text = a.ToString();
+                AlphaValue.SelectAll();
+            }
+
+            // update alpha byte
+            if (RedValue != null)
+            {
+                RedValue.Text = r.ToString();
+                RedValue.SelectAll();
+            }
+
+            // update alpha byte
+            if (GreenValue != null)
+            {
+                GreenValue.Text = g.ToString();
+                GreenValue.SelectAll();
+            }
+
+            // update alpha byte
+            if (BlueValue != null)
+            {
+                BlueValue.Text = b.ToString();
+                BlueValue.SelectAll();
+            }
+
             ColorSelected?.Invoke(m_selectedColor);
         }
 
@@ -267,6 +316,137 @@ namespace EasyPainter.Imaging.Silverlight
             if (!Byte.TryParse(strG, NumberStyles.HexNumber, null, out g)) return false;
             if (!Byte.TryParse(strB, NumberStyles.HexNumber, null, out b)) return false;
             return true;
+        }
+    }
+    public class SelectAllFocusBehavior
+    {
+        public static bool GetEnable(DependencyObject obj)
+        {
+            return (bool)obj.GetValue(EnableProperty);
+        }
+        public static void SetEnable(DependencyObject obj, bool value)
+        {
+            obj.SetValue(EnableProperty, value);
+        }
+        public static readonly DependencyProperty EnableProperty = DependencyProperty.RegisterAttached("Enable", typeof(bool), typeof(SelectAllFocusBehavior), new PropertyMetadata(false, OnEnableChanged));
+        private static void OnEnableChanged(object d, DependencyPropertyChangedEventArgs e)
+        {
+            var frameworkElement = d as FrameworkElement;
+            if (frameworkElement == null) return;
+
+            if (e.NewValue is bool == false) return;
+
+            if ((bool)e.NewValue)
+            {
+                frameworkElement.GotFocus += SelectAll;
+                frameworkElement.PreviewMouseDown += IgnoreMouseButton;
+            }
+            else
+            {
+                frameworkElement.GotFocus -= SelectAll;
+                frameworkElement.PreviewMouseDown -= IgnoreMouseButton;
+            }
+        }
+
+        private static void SelectAll(object sender, RoutedEventArgs e)
+        {
+            var frameworkElement = e.OriginalSource as FrameworkElement;
+            if (frameworkElement is TextBox)
+                ((TextBox)frameworkElement).SelectAll();
+            else if (frameworkElement is PasswordBox)
+                ((PasswordBox)frameworkElement).SelectAll();
+        }
+
+        private static void IgnoreMouseButton
+                (object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            var frameworkElement = sender as FrameworkElement;
+            if (frameworkElement == null || frameworkElement.IsKeyboardFocusWithin) return;
+            e.Handled = true;
+            frameworkElement.Focus();
+        }
+    }
+    public static class NumericByteValueOnlyBehavior
+    {
+        public static bool GetIsNumericByteValueOnly(DependencyObject obj)
+        {
+            return (bool)obj.GetValue(IsNumericByteValueOnlyProperty);
+        }
+        public static void SetIsNumericByteValueOnly(DependencyObject obj, bool value)
+        {
+            obj.SetValue(IsNumericByteValueOnlyProperty, value);
+        }
+        public static readonly DependencyProperty IsNumericByteValueOnlyProperty = DependencyProperty.RegisterAttached("IsNumericByteValueOnly", typeof(bool), typeof(NumericByteValueOnlyBehavior), new PropertyMetadata(false, OnIsNumericByteValueOnlyChanged));
+        private static void OnIsNumericByteValueOnlyChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (sender.GetType() == typeof(TextBox))
+            {
+                TextBox txt = (TextBox)sender;
+                txt.TextChanged += Txt_TextChanged;
+            }
+        }
+        private static void Txt_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                TextBox txt = (TextBox)sender;
+                foreach (TextChange item in e.Changes)
+                {
+                    if (item.AddedLength != 0)
+                    {
+                        foreach (char chr in txt.Text.Substring(item.Offset, item.AddedLength).ToCharArray())
+                        {
+                            bool scrap = false;
+                            if (chr != '1'
+                                && chr != '2'
+                                && chr != '3'
+                                && chr != '4'
+                                && chr != '5'
+                                && chr != '6'
+                                && chr != '7'
+                                && chr != '8'
+                                && chr != '9'
+                                && chr != '0'
+                                && chr != '\n'
+                                && chr != '\r')
+                            {
+                                scrap = true;
+                            }
+                            if (scrap)
+                            {
+                                int temp = txt.CaretIndex;
+                                txt.Text = txt.Text.Remove(item.Offset, item.AddedLength);
+                                txt.CaretIndex = temp - 1;
+                            }
+                        }
+                    }
+                }
+                if (txt.Text.Length > 3)
+                {
+                    int temp = txt.CaretIndex;
+                    txt.Text = txt.Text.Substring(0, 3);
+                    if (temp > 3) temp = 3;
+                    txt.CaretIndex = temp;
+                }
+                if (int.TryParse(txt.Text, out int i))
+                {
+                    if (i > 255)
+                    {
+                        int temp = txt.CaretIndex;
+                        txt.Text = 255.ToString();
+                        if (temp > 3) temp = 3;
+                        txt.CaretIndex = temp;
+                    }
+                    if (i < 0)
+                    {
+                        int temp = txt.CaretIndex;
+                        txt.Text = 0.ToString();
+                        if (temp > 3) temp = 3;
+                        txt.CaretIndex = temp;
+                    }
+                }
+            }
+            catch { }
         }
     }
 }

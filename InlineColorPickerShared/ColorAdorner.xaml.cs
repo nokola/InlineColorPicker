@@ -102,6 +102,8 @@ namespace InlineColorPicker {
             ITextBuffer buffer = _tag.TrackingSpan.TextBuffer;
             SnapshotSpan span = _tag.TrackingSpan.GetSpan(buffer.CurrentSnapshot);
             buffer.Replace(span, ColorSpace.GetHexCodeOrName(_tag.ColorInfo));
+
+
         }
 
         void picker_ColorSelected(ColorInfo info) {
