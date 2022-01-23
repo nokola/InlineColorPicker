@@ -8,14 +8,33 @@
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />
-			<RowDefinition Height="255"/>
+			<RowDefinition Height="256"/>
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="255"/>
+			<ColumnDefinition Width="256"/>
 			<ColumnDefinition Width="30" />
+			<ColumnDefinition Width="25" />
 			<ColumnDefinition Width="auto" />
 		</Grid.ColumnDefinitions>
-		<Grid x:Name="rectHueMonitorParent" Grid.Row="1" Grid.Column="1" Margin="5,0,5,0">
+		<Grid x:Name="rectLuminosityMonitorParent" Grid.Row="1" Grid.Column="1" Margin="5,0,5,0">
+			<Rectangle x:Name="rectLuminosityMonitor" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+				<Rectangle.Fill>
+					<LinearGradientBrush StartPoint ="0,0" EndPoint="0,1">
+						<GradientStop Offset="0.00" Color="White"/>
+						<GradientStop Offset="1.00" Color="Black"/>
+					</LinearGradientBrush>
+				</Rectangle.Fill>
+			</Rectangle>
+			<Canvas x:Name="LuminositySelector" Height="8" Margin="0,-4,0,0" VerticalAlignment="Top">
+				<Path Width="5" Height="8" Stretch="Fill" StrokeLineJoin="Round" Stroke="#FF000000" Fill="#FF000000" Data="F1 M 276.761,316L 262.619,307.835L 262.619,324.165L 276.761,316 Z " />
+				<Path Width="5" Height="8" Canvas.Top="8" Canvas.Left="20" Stretch="Fill" StrokeLineJoin="Round" Stroke="#FF000000" Fill="#FF000000" Data="F1 M 276.761,316L 262.619,307.835L 262.619,324.165L 276.761,316 Z ">
+					<Path.RenderTransform>
+						<RotateTransform Angle="180" />
+					</Path.RenderTransform>
+				</Path>
+			</Canvas>
+		</Grid>
+		<Grid x:Name="rectHueMonitorParent" Grid.Row="1" Grid.Column="2" Margin="0,0,5,0">
 			<Rectangle x:Name="rectHueMonitor" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
 				<Rectangle.Fill>
 					<LinearGradientBrush StartPoint ="0,0" EndPoint="0,1">
@@ -138,7 +157,7 @@
 					 TextChanged="ByteValue_TextChanged"
 					 MouseWheel="ByteValue_MouseWheel"/>
 		</StackPanel>
-		<my:AlphaSelectControl Grid.Column="2" HorizontalAlignment="Center" Height="200"
+		<my:AlphaSelectControl Grid.Column="3" HorizontalAlignment="Center" Height="200"
                 x:Name="ctlAlphaSelect" Margin="0,0,0,134" Grid.Row="1"  />
 	</Grid>
 </UserControl>

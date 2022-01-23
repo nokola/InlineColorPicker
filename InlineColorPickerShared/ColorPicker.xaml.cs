@@ -73,6 +73,12 @@ namespace EasyPainter.Imaging.Silverlight
             rectHueMonitor.MouseMove += new MouseEventHandler(rectHueMonitor_MouseMove);
             rectHueMonitor.MouseWheel += rectHueMonitor_MouseWheel;
 
+            rectLuminosityMonitor.MouseLeftButtonDown += new MouseButtonEventHandler(rectLuminosityMonitor_MouseLeftButtonDown);
+            rectLuminosityMonitor.MouseLeftButtonUp += new MouseButtonEventHandler(rectLuminosityMonitor_MouseLeftButtonUp);
+            rectLuminosityMonitor.LostMouseCapture += new MouseEventHandler(rectLuminosityMonitor_LostMouseCapture);
+            rectLuminosityMonitor.MouseMove += new MouseEventHandler(rectLuminosityMonitor_MouseMove);
+            rectLuminosityMonitor.MouseWheel += rectLuminosityMonitor_MouseWheel;
+
             rectSampleMonitor.MouseLeftButtonDown += new MouseButtonEventHandler(rectSampleMonitor_MouseLeftButtonDown);
             rectSampleMonitor.MouseLeftButtonUp += new MouseButtonEventHandler(rectSampleMonitor_MouseLeftButtonUp);
             rectSampleMonitor.LostMouseCapture += new MouseEventHandler(rectSampleMonitor_LostMouseCapture);
@@ -100,7 +106,25 @@ namespace EasyPainter.Imaging.Silverlight
 			{
                 yPos += 1;
             }
-            UpdateSelection(yPos);
+            UpdateHueSelection(yPos);
+        }
+
+        void rectLuminosityMonitor_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            GeneralTransform trans = rectLuminosityMonitorParent.TransformToDescendant(LuminositySelector);
+            Point p = trans.Transform(new Point(0, -4));
+            int yPos = (int)Math.Abs(p.Y);
+            if (yPos < 0) yPos = 0;
+            if (yPos >= rectLuminosityMonitor.ActualHeight) yPos = (int)rectLuminosityMonitor.ActualHeight - 1;
+            if (e.Delta > 0)
+            {
+                yPos -= 1;
+            }
+            else if (e.Delta < 0)
+            {
+                yPos += 1;
+            }
+            UpdateLuminositySelection(yPos);
         }
 
         bool _firstTime = true;
@@ -124,17 +148,35 @@ namespace EasyPainter.Imaging.Silverlight
             _mouseCapture = null;
         }
 
+        void rectLuminosityMonitor_LostMouseCapture(object sender, MouseEventArgs e)
+        {
+            _mouseCapture = null;
+        }
+
         void rectHueMonitor_MouseLeftButtonDown(object sender, MouseEventArgs e)
         {
             rectHueMonitor.CaptureMouse();
             _mouseCapture = rectHueMonitor;
             int yPos = (int)e.GetPosition((UIElement)sender).Y;
-            UpdateSelection(yPos);
+            UpdateHueSelection(yPos);
+        }
+
+        void rectLuminosityMonitor_MouseLeftButtonDown(object sender, MouseEventArgs e)
+        {
+            rectLuminosityMonitor.CaptureMouse();
+            _mouseCapture = rectLuminosityMonitor;
+            int yPos = (int)e.GetPosition((UIElement)sender).Y;
+            UpdateLuminositySelection(yPos);
         }
 
         void rectHueMonitor_MouseLeftButtonUp(object sender, MouseEventArgs e)
         {
             rectHueMonitor.ReleaseMouseCapture();
+        }
+
+        void rectLuminosityMonitor_MouseLeftButtonUp(object sender, MouseEventArgs e)
+        {
+            rectLuminosityMonitor.ReleaseMouseCapture();
         }
 
         void rectHueMonitor_MouseMove(object sender, MouseEventArgs e)
@@ -143,7 +185,16 @@ namespace EasyPainter.Imaging.Silverlight
             int yPos = (int)e.GetPosition((UIElement)sender).Y;
             if (yPos < 0) yPos = 0;
             if (yPos >= rectHueMonitor.ActualHeight) yPos = (int)rectHueMonitor.ActualHeight - 1;
-            UpdateSelection(yPos);
+            UpdateHueSelection(yPos);
+        }
+
+        void rectLuminosityMonitor_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (_mouseCapture != rectLuminosityMonitor) return;
+            int yPos = (int)e.GetPosition((UIElement)sender).Y;
+            if (yPos < 0) yPos = 0;
+            if (yPos >= rectLuminosityMonitor.ActualHeight) yPos = (int)rectLuminosityMonitor.ActualHeight - 1;
+            UpdateLuminositySelection(yPos);
         }
 
         void rectSampleMonitor_MouseLeftButtonDown(object sender, MouseEventArgs e)
@@ -176,7 +227,6 @@ namespace EasyPainter.Imaging.Silverlight
 
         private void UpdateSample(double xPos, double yPos)
         {
-
             SampleSelector.Margin = new Thickness(xPos - (SampleSelector.Height / 2), yPos - (SampleSelector.Height / 2), 0, 0);
 
             float yComponent = 1 - (float)(yPos / rectSample.ActualHeight);
@@ -185,23 +235,37 @@ namespace EasyPainter.Imaging.Silverlight
             byte a = m_selectedColor.Color.Value.A;
             Color c = ColorSpace.ConvertHsvToRgb((float)m_selectedHue, xComponent, yComponent);
             c.A = a;
+            Color maxLum = ColorSpace.ConvertHsvToRgb((float)m_selectedHue, xComponent, 1);
+            maxLum.A = a;
             m_selectedColor.Color = c;
             SelectedColor.Fill = new SolidColorBrush(m_selectedColor.Color.Value);
             SetTexts(ColorSpace.GetHexCodeOrName(m_selectedColor));
 
             ctlAlphaSelect.DisplayColor = m_selectedColor.Color.Value;
+            rectLuminosityMonitor.Fill = new LinearGradientBrush(Color.FromArgb(255, maxLum.R, maxLum.G, maxLum.B), Color.FromArgb(255, 0, 0, 0), 90);
+            LuminositySelector.Margin = new Thickness(0, yPos - (LuminositySelector.ActualHeight / 2), 0, 0);
             ColorSelected?.Invoke(m_selectedColor);
         }
 
-        private void UpdateSelection(int yPos)
+        private void UpdateHueSelection(int yPos)
         {
             int huePos = (int)(yPos / rectHueMonitor.ActualHeight * 255);
-            int gradientStops = 6;
+            int gradientStops = 6;//what is this for?
             Color c = ColorSpace.GetColorFromPosition(huePos * gradientStops);
             rectSample.Fill = new SolidColorBrush(c);
             HueSelector.Margin = new Thickness(0, yPos - (HueSelector.ActualHeight / 2), 0, 0);
             m_selectedHue = (float)(yPos / rectHueMonitor.ActualHeight) * 360;
             UpdateSample(m_sampleX, m_sampleY);
+        }
+
+        private void UpdateLuminositySelection(int yPos)
+        {
+            LuminositySelector.Margin = new Thickness(0, yPos - (LuminositySelector.ActualHeight / 2), 0, 0);
+
+            System.Diagnostics.Debug.WriteLine(yPos);
+            System.Diagnostics.Debug.WriteLine("sdaa " + m_sampleX);
+            System.Diagnostics.Debug.WriteLine("sdwa " + m_sampleY);
+            UpdateSample(m_sampleX, yPos);
         }
 
         private void ctlAlphaSelect_AlphaChanged(byte newAlpha)
@@ -305,6 +369,13 @@ namespace EasyPainter.Imaging.Silverlight
             {
                 // TODO: fix - when null should be assigned later
                 ctlAlphaSelect.DisplayColor = m_selectedColor.Color.Value;
+            }
+
+            if (rectLuminosityMonitor != null)
+			{
+                //Color maxLum = ColorSpace.ConvertHsvToRgb((float)m_selectedHue, xComponent, 1);
+                //maxLum.A = a;
+                //rectLuminosityMonitor.Fill = new LinearGradientBrush(Color.FromArgb(255, m_selectedColor.Color.Value.R, m_selectedColor.Color.Value.G, m_selectedColor.Color.Value.B), Color.FromArgb(255, 0, 0, 0), 90);
             }
 
             // update alpha byte
