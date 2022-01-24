@@ -27,12 +27,12 @@
 				</Rectangle.Fill>
 			</Rectangle>
 			<Canvas x:Name="SaturationSelector" Height="8" Margin="4,0,0,0" HorizontalAlignment="Left">
-				<Path Width="5" Height="8" Canvas.Top="-6" Stretch="Fill" StrokeLineJoin="Round" Stroke="#FF000000" Fill="#FF000000" Data="F1 M 276.761,316L 262.619,307.835L 262.619,324.165L 276.761,316 Z ">
+				<Path Width="5" Height="8" Canvas.Top="-6" Canvas.Left="4" Stretch="Fill" StrokeLineJoin="Round" Stroke="#FF000000" Fill="#FF000000" Data="F1 M 276.761,316L 262.619,307.835L 262.619,324.165L 276.761,316 Z ">
 					<Path.RenderTransform>
 						<RotateTransform Angle="90" />
 					</Path.RenderTransform>
 				</Path>
-				<Path Width="5" Height="8" Canvas.Top="14" Canvas.Left="-8" Stretch="Fill" StrokeLineJoin="Round" Stroke="#FF000000" Fill="#FF000000" Data="F1 M 276.761,316L 262.619,307.835L 262.619,324.165L 276.761,316 Z ">
+				<Path Width="5" Height="8" Canvas.Top="14" Canvas.Left="-4" Stretch="Fill" StrokeLineJoin="Round" Stroke="#FF000000" Fill="#FF000000" Data="F1 M 276.761,316L 262.619,307.835L 262.619,324.165L 276.761,316 Z ">
 					<Path.RenderTransform>
 						<RotateTransform Angle="270" />
 					</Path.RenderTransform>
