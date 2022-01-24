@@ -416,12 +416,6 @@ namespace EasyPainter.Imaging.Silverlight
             const int gradientStops = 6;
             rectSample.Fill = new SolidColorBrush(ColorSpace.GetColorFromPosition(((int)(h * 255)) * gradientStops));
 
-            //Color maxLum = ColorSpace.ConvertHsvToRgb((float)m_selectedHue, (float)m_sampleX, 1.0f);
-            //maxLum.A = a;
-            //Color maxSat = ColorSpace.ConvertHsvToRgb((float)m_selectedHue, 1.0f, (float)m_sampleY);
-            //maxSat.A = a;
-            //rectLuminosityMonitor.Fill = new LinearGradientBrush(Color.FromArgb(255, maxLum.R, maxLum.G, maxLum.B), Color.FromArgb(255, 0, 0, 0), 90);
-            //rectSaturationMonitor.Fill = new LinearGradientBrush(Color.FromArgb(255, 255, 255, 255), Color.FromArgb(255, maxSat.R, maxSat.G, maxSat.B), 0);
             LuminositySelector.Margin = new Thickness(0, yPos - (LuminositySelector.ActualHeight / 2), 0, 0);
             SaturationSelector.Margin = new Thickness(xPos + (SaturationSelector.ActualWidth / 2), 0, 0, 0);
 
@@ -433,14 +427,6 @@ namespace EasyPainter.Imaging.Silverlight
             {
                 // TODO: fix - when null should be assigned later
                 ctlAlphaSelect.DisplayColor = m_selectedColor.Color.Value;
-            }
-
-            if (rectLuminosityMonitor != null)
-			{
-            }
-
-            if (rectSaturationMonitor != null)
-            {
             }
 
             // update alpha byte
@@ -467,9 +453,18 @@ namespace EasyPainter.Imaging.Silverlight
                 BlueValue.Text = b.ToString();
             }
 
-            ColorSelected?.Invoke(m_selectedColor);
+            float yComponent = 1 - (float)(yPos / rectSample.ActualHeight);
+            float xComponent = (float)(xPos / rectSample.ActualWidth);
+            Color c = ColorSpace.ConvertHsvToRgb((float)m_selectedHue, (float)xComponent, (float)yComponent);
+            c.A = a;
+            Color maxLum = ColorSpace.ConvertHsvToRgb((float)m_selectedHue, (float)xComponent, 1.0f);
+            maxLum.A = a;
+            Color maxSat = ColorSpace.ConvertHsvToRgb((float)m_selectedHue, 1.0f, (float)yComponent);
+            maxSat.A = a;
+            rectLuminosityMonitor.Fill = new LinearGradientBrush(Color.FromArgb(255, maxLum.R, maxLum.G, maxLum.B), Color.FromArgb(255, 0, 0, 0), 90);
+            rectSaturationMonitor.Fill = new LinearGradientBrush(Color.FromArgb(255, 255, 255, 255), Color.FromArgb(255, maxSat.R, maxSat.G, maxSat.B), 0);
 
-            UpdateSample(m_sampleX, m_sampleY);
+            ColorSelected?.Invoke(m_selectedColor);
         }
 
         private bool GetArgb(string hexColorOrName, out byte a, out byte r, out byte g, out byte b)
