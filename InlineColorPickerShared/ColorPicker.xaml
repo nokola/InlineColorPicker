@@ -8,15 +8,38 @@
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />
+			<RowDefinition Height="30" />
 			<RowDefinition Height="256"/>
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="256"/>
+			<ColumnDefinition Width="257"/>
 			<ColumnDefinition Width="30" />
 			<ColumnDefinition Width="25" />
 			<ColumnDefinition Width="auto" />
 		</Grid.ColumnDefinitions>
-		<Grid x:Name="rectLuminosityMonitorParent" Grid.Row="1" Grid.Column="1" Margin="5,0,5,0">
+		<Grid x:Name="rectSaturationMonitorParent" Grid.Row="1" Grid.Column="0" >
+			<Rectangle x:Name="rectSaturationMonitor" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,5,0,5" >
+				<Rectangle.Fill>
+					<LinearGradientBrush StartPoint ="0,0" EndPoint="1,0">
+						<GradientStop Offset="0.00" Color="White"/>
+						<GradientStop Offset="1.00" Color="Black"/>
+					</LinearGradientBrush>
+				</Rectangle.Fill>
+			</Rectangle>
+			<Canvas x:Name="SaturationSelector" Height="8" Margin="4,0,0,0" HorizontalAlignment="Left">
+				<Path Width="5" Height="8" Canvas.Top="-6" Stretch="Fill" StrokeLineJoin="Round" Stroke="#FF000000" Fill="#FF000000" Data="F1 M 276.761,316L 262.619,307.835L 262.619,324.165L 276.761,316 Z ">
+					<Path.RenderTransform>
+						<RotateTransform Angle="90" />
+					</Path.RenderTransform>
+				</Path>
+				<Path Width="5" Height="8" Canvas.Top="14" Canvas.Left="-8" Stretch="Fill" StrokeLineJoin="Round" Stroke="#FF000000" Fill="#FF000000" Data="F1 M 276.761,316L 262.619,307.835L 262.619,324.165L 276.761,316 Z ">
+					<Path.RenderTransform>
+						<RotateTransform Angle="270" />
+					</Path.RenderTransform>
+				</Path>
+			</Canvas>
+		</Grid>
+		<Grid x:Name="rectLuminosityMonitorParent" Grid.Row="2" Grid.Column="1" Margin="5,0,5,0">
 			<Rectangle x:Name="rectLuminosityMonitor" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
 				<Rectangle.Fill>
 					<LinearGradientBrush StartPoint ="0,0" EndPoint="0,1">
@@ -34,7 +57,7 @@
 				</Path>
 			</Canvas>
 		</Grid>
-		<Grid x:Name="rectHueMonitorParent" Grid.Row="1" Grid.Column="2" Margin="0,0,5,0">
+		<Grid x:Name="rectHueMonitorParent" Grid.Row="2" Grid.Column="2" Margin="0,0,5,0">
 			<Rectangle x:Name="rectHueMonitor" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
 				<Rectangle.Fill>
 					<LinearGradientBrush StartPoint ="0,0" EndPoint="0,1">
@@ -58,7 +81,7 @@
 			</Canvas>
 		</Grid>
 
-		<Grid x:Name="colorArea" Grid.Row="1" Grid.Column="0" >
+		<Grid x:Name="colorArea" Grid.Row="2" Grid.Column="0" >
 			<Rectangle x:Name="rectSample" Fill="Red" />
 			<Rectangle x:Name="rectWhiteGradient">
 				<Rectangle.Fill>
@@ -84,7 +107,7 @@
 
 		</Grid>
 
-		<StackPanel Grid.ColumnSpan="3" Orientation="Horizontal" Height="26" >
+		<StackPanel Grid.ColumnSpan="4" Orientation="Horizontal" Height="26" >
 			<Grid Margin="0,4,4,0" >
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition />
@@ -104,7 +127,7 @@
                      Height="20"
 					 my:SelectAllFocusBehavior.Enable="True"
                      VerticalAlignment="Center" TextChanged="HexValue_TextChanged"/>
-			<TextBlock VerticalAlignment="Center" Foreground="White" Margin="32,0,0,0">A:</TextBlock>
+			<TextBlock VerticalAlignment="Center" Foreground="White" Margin="55,0,0,0">A:</TextBlock>
 			<TextBox x:Name="AlphaValue" Foreground="Black" Background="#4fFFFFFF" BorderBrush="#4F444444" BorderThickness="1"
                      Width="30" 
 					 Text="0" 
@@ -158,6 +181,6 @@
 					 MouseWheel="ByteValue_MouseWheel"/>
 		</StackPanel>
 		<my:AlphaSelectControl Grid.Column="3" HorizontalAlignment="Center" Height="200"
-                x:Name="ctlAlphaSelect" Margin="0,0,0,134" Grid.Row="1"  />
+                x:Name="ctlAlphaSelect" Margin="0,0,0,134" Grid.Row="2"  />
 	</Grid>
 </UserControl>

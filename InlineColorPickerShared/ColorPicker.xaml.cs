@@ -79,6 +79,12 @@ namespace EasyPainter.Imaging.Silverlight
             rectLuminosityMonitor.MouseMove += new MouseEventHandler(rectLuminosityMonitor_MouseMove);
             rectLuminosityMonitor.MouseWheel += rectLuminosityMonitor_MouseWheel;
 
+            rectSaturationMonitor.MouseLeftButtonDown += new MouseButtonEventHandler(rectSaturationMonitor_MouseLeftButtonDown);
+            rectSaturationMonitor.MouseLeftButtonUp += new MouseButtonEventHandler(rectSaturationMonitor_MouseLeftButtonUp);
+            rectSaturationMonitor.LostMouseCapture += new MouseEventHandler(rectSaturationMonitor_LostMouseCapture);
+            rectSaturationMonitor.MouseMove += new MouseEventHandler(rectSaturationMonitor_MouseMove);
+            rectSaturationMonitor.MouseWheel += rectSaturationMonitor_MouseWheel;
+
             rectSampleMonitor.MouseLeftButtonDown += new MouseButtonEventHandler(rectSampleMonitor_MouseLeftButtonDown);
             rectSampleMonitor.MouseLeftButtonUp += new MouseButtonEventHandler(rectSampleMonitor_MouseLeftButtonUp);
             rectSampleMonitor.LostMouseCapture += new MouseEventHandler(rectSampleMonitor_LostMouseCapture);
@@ -127,6 +133,24 @@ namespace EasyPainter.Imaging.Silverlight
             UpdateLuminositySelection(yPos);
         }
 
+        void rectSaturationMonitor_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            GeneralTransform trans = rectSaturationMonitorParent.TransformToDescendant(SaturationSelector);
+            Point p = trans.Transform(new Point(0, 0));
+            int xPos = (int)Math.Abs(p.X);
+            if (xPos < 0) xPos = 0;
+            if (xPos >= rectSaturationMonitor.ActualWidth) xPos = (int)rectSaturationMonitor.ActualWidth - 1;
+            if (e.Delta > 0)
+            {
+                xPos += 1;
+            }
+            else if (e.Delta < 0)
+            {
+                xPos -= 1;
+            }
+            UpdateSaturationSelection(xPos);
+        }
+
         bool _firstTime = true;
         void ColorPicker_LayoutUpdated(object sender, EventArgs e)
         {
@@ -153,6 +177,11 @@ namespace EasyPainter.Imaging.Silverlight
             _mouseCapture = null;
         }
 
+        void rectSaturationMonitor_LostMouseCapture(object sender, MouseEventArgs e)
+        {
+            _mouseCapture = null;
+        }
+
         void rectHueMonitor_MouseLeftButtonDown(object sender, MouseEventArgs e)
         {
             rectHueMonitor.CaptureMouse();
@@ -169,6 +198,14 @@ namespace EasyPainter.Imaging.Silverlight
             UpdateLuminositySelection(yPos);
         }
 
+        void rectSaturationMonitor_MouseLeftButtonDown(object sender, MouseEventArgs e)
+        {
+            rectSaturationMonitor.CaptureMouse();
+            _mouseCapture = rectSaturationMonitor;
+            int xPos = (int)e.GetPosition((UIElement)sender).X;
+            UpdateSaturationSelection(xPos);
+        }
+
         void rectHueMonitor_MouseLeftButtonUp(object sender, MouseEventArgs e)
         {
             rectHueMonitor.ReleaseMouseCapture();
@@ -177,6 +214,11 @@ namespace EasyPainter.Imaging.Silverlight
         void rectLuminosityMonitor_MouseLeftButtonUp(object sender, MouseEventArgs e)
         {
             rectLuminosityMonitor.ReleaseMouseCapture();
+        }
+
+        void rectSaturationMonitor_MouseLeftButtonUp(object sender, MouseEventArgs e)
+        {
+            rectSaturationMonitor.ReleaseMouseCapture();
         }
 
         void rectHueMonitor_MouseMove(object sender, MouseEventArgs e)
@@ -195,6 +237,15 @@ namespace EasyPainter.Imaging.Silverlight
             if (yPos < 0) yPos = 0;
             if (yPos >= rectLuminosityMonitor.ActualHeight) yPos = (int)rectLuminosityMonitor.ActualHeight - 1;
             UpdateLuminositySelection(yPos);
+        }
+
+        void rectSaturationMonitor_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (_mouseCapture != rectSaturationMonitor) return;
+            int xPos = (int)e.GetPosition((UIElement)sender).X;
+            if (xPos < 0) xPos = 0;
+            if (xPos >= rectSaturationMonitor.ActualWidth) xPos = (int)rectSaturationMonitor.ActualWidth - 1;
+            UpdateSaturationSelection(xPos);
         }
 
         void rectSampleMonitor_MouseLeftButtonDown(object sender, MouseEventArgs e)
@@ -237,13 +288,17 @@ namespace EasyPainter.Imaging.Silverlight
             c.A = a;
             Color maxLum = ColorSpace.ConvertHsvToRgb((float)m_selectedHue, xComponent, 1);
             maxLum.A = a;
+            Color maxSat = ColorSpace.ConvertHsvToRgb((float)m_selectedHue, 1, yComponent);
+            maxSat.A = a;
             m_selectedColor.Color = c;
             SelectedColor.Fill = new SolidColorBrush(m_selectedColor.Color.Value);
             SetTexts(ColorSpace.GetHexCodeOrName(m_selectedColor));
 
             ctlAlphaSelect.DisplayColor = m_selectedColor.Color.Value;
             rectLuminosityMonitor.Fill = new LinearGradientBrush(Color.FromArgb(255, maxLum.R, maxLum.G, maxLum.B), Color.FromArgb(255, 0, 0, 0), 90);
+            rectSaturationMonitor.Fill = new LinearGradientBrush(Color.FromArgb(255, 255, 255, 255), Color.FromArgb(255, maxSat.R, maxSat.G, maxSat.B), 0);
             LuminositySelector.Margin = new Thickness(0, yPos - (LuminositySelector.ActualHeight / 2), 0, 0);
+            SaturationSelector.Margin = new Thickness(xPos + (SaturationSelector.ActualWidth / 2), 0, 0, 0);
             ColorSelected?.Invoke(m_selectedColor);
         }
 
@@ -260,12 +315,12 @@ namespace EasyPainter.Imaging.Silverlight
 
         private void UpdateLuminositySelection(int yPos)
         {
-            LuminositySelector.Margin = new Thickness(0, yPos - (LuminositySelector.ActualHeight / 2), 0, 0);
-
-            System.Diagnostics.Debug.WriteLine(yPos);
-            System.Diagnostics.Debug.WriteLine("sdaa " + m_sampleX);
-            System.Diagnostics.Debug.WriteLine("sdwa " + m_sampleY);
             UpdateSample(m_sampleX, yPos);
+        }
+
+        private void UpdateSaturationSelection(int xPos)
+        {
+            UpdateSample(xPos, m_sampleY);
         }
 
         private void ctlAlphaSelect_AlphaChanged(byte newAlpha)
@@ -361,6 +416,15 @@ namespace EasyPainter.Imaging.Silverlight
             const int gradientStops = 6;
             rectSample.Fill = new SolidColorBrush(ColorSpace.GetColorFromPosition(((int)(h * 255)) * gradientStops));
 
+            //Color maxLum = ColorSpace.ConvertHsvToRgb((float)m_selectedHue, (float)m_sampleX, 1.0f);
+            //maxLum.A = a;
+            //Color maxSat = ColorSpace.ConvertHsvToRgb((float)m_selectedHue, 1.0f, (float)m_sampleY);
+            //maxSat.A = a;
+            //rectLuminosityMonitor.Fill = new LinearGradientBrush(Color.FromArgb(255, maxLum.R, maxLum.G, maxLum.B), Color.FromArgb(255, 0, 0, 0), 90);
+            //rectSaturationMonitor.Fill = new LinearGradientBrush(Color.FromArgb(255, 255, 255, 255), Color.FromArgb(255, maxSat.R, maxSat.G, maxSat.B), 0);
+            LuminositySelector.Margin = new Thickness(0, yPos - (LuminositySelector.ActualHeight / 2), 0, 0);
+            SaturationSelector.Margin = new Thickness(xPos + (SaturationSelector.ActualWidth / 2), 0, 0, 0);
+
             // Update Hue locator
             HueSelector.Margin = new Thickness(0, (h * rectHueMonitor.ActualHeight) - (HueSelector.ActualHeight / 2), 0, 0);
 
@@ -373,9 +437,10 @@ namespace EasyPainter.Imaging.Silverlight
 
             if (rectLuminosityMonitor != null)
 			{
-                //Color maxLum = ColorSpace.ConvertHsvToRgb((float)m_selectedHue, xComponent, 1);
-                //maxLum.A = a;
-                //rectLuminosityMonitor.Fill = new LinearGradientBrush(Color.FromArgb(255, m_selectedColor.Color.Value.R, m_selectedColor.Color.Value.G, m_selectedColor.Color.Value.B), Color.FromArgb(255, 0, 0, 0), 90);
+            }
+
+            if (rectSaturationMonitor != null)
+            {
             }
 
             // update alpha byte
@@ -403,6 +468,8 @@ namespace EasyPainter.Imaging.Silverlight
             }
 
             ColorSelected?.Invoke(m_selectedColor);
+
+            UpdateSample(m_sampleX, m_sampleY);
         }
 
         private bool GetArgb(string hexColorOrName, out byte a, out byte r, out byte g, out byte b)
