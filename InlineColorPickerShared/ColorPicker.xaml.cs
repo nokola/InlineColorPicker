@@ -99,6 +99,8 @@ namespace EasyPainter.Imaging.Silverlight
 
         void rectHueMonitor_MouseWheel(object sender, MouseWheelEventArgs e)
         {
+            int increment = 1;
+            if (Keyboard.Modifiers == ModifierKeys.Control) increment = 5;
             GeneralTransform trans = rectHueMonitorParent.TransformToDescendant(HueSelector);
             Point p = trans.Transform(new Point(0, -4));
             int yPos = (int)Math.Abs(p.Y);
@@ -106,17 +108,19 @@ namespace EasyPainter.Imaging.Silverlight
             if (yPos >= rectHueMonitor.ActualHeight) yPos = (int)rectHueMonitor.ActualHeight - 1;
             if (e.Delta > 0)
 			{
-                yPos -= 1;
+                yPos -= increment;
 			}
             else if (e.Delta < 0)
 			{
-                yPos += 1;
+                yPos += increment;
             }
             UpdateHueSelection(yPos);
         }
 
         void rectLuminosityMonitor_MouseWheel(object sender, MouseWheelEventArgs e)
         {
+            int increment = 1;
+            if (Keyboard.Modifiers == ModifierKeys.Control) increment = 5;
             GeneralTransform trans = rectLuminosityMonitorParent.TransformToDescendant(LuminositySelector);
             Point p = trans.Transform(new Point(0, -4));
             int yPos = (int)Math.Abs(p.Y);
@@ -124,17 +128,19 @@ namespace EasyPainter.Imaging.Silverlight
             if (yPos >= rectLuminosityMonitor.ActualHeight) yPos = (int)rectLuminosityMonitor.ActualHeight - 1;
             if (e.Delta > 0)
             {
-                yPos -= 1;
+                yPos -= increment;
             }
             else if (e.Delta < 0)
             {
-                yPos += 1;
+                yPos += increment;
             }
             UpdateLuminositySelection(yPos);
         }
 
         void rectSaturationMonitor_MouseWheel(object sender, MouseWheelEventArgs e)
         {
+            int increment = 1;
+            if (Keyboard.Modifiers == ModifierKeys.Control) increment = 5;
             GeneralTransform trans = rectSaturationMonitorParent.TransformToDescendant(SaturationSelector);
             Point p = trans.Transform(new Point(0, 0));
             int xPos = (int)Math.Abs(p.X);
@@ -142,11 +148,11 @@ namespace EasyPainter.Imaging.Silverlight
             if (xPos >= rectSaturationMonitor.ActualWidth) xPos = (int)rectSaturationMonitor.ActualWidth - 1;
             if (e.Delta > 0)
             {
-                xPos += 1;
+                xPos += increment;
             }
             else if (e.Delta < 0)
             {
-                xPos -= 1;
+                xPos -= increment;
             }
             UpdateSaturationSelection(xPos);
         }
