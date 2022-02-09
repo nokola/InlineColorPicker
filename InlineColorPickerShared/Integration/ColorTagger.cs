@@ -12,10 +12,10 @@ namespace InlineColorPicker
 {
     internal sealed class ColorTagger : ITagger<ColorTag>
     {
-        private ITextBuffer _buffer;
-        private bool shouldAllowFreeFloatingColorNames = false; // true for CSS, false otherwise. Used to mark "red" vs red (no quotes) as tag
+        private readonly ITextBuffer _buffer;
+        private readonly bool shouldAllowFreeFloatingColorNames = false; // true for CSS, false otherwise. Used to mark "Red" vs red (no quotes) as tag
 
-        Regex _regex = new Regex(@"\#[\dA-F]{3,8}\b", RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+		readonly Regex _regex = new Regex(@"\#[\dA-F]{3,8}\b", RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
 
         internal ColorTagger(ITextBuffer buffer)
         {
